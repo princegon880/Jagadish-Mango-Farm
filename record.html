@@ -323,6 +323,7 @@
         <div class="dashboard-tabs" style="display: flex; gap: 30px; margin-bottom: 30px; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px;">
             <button id="tabManual" style="background: none; border: none; font-size: 1.25rem; font-weight: 800; color: var(--primary-green); border-bottom: 3px solid var(--primary-green); padding-bottom: 8px; cursor: pointer; transition: all 0.3s;">Manual Sales Ledger</button>
             <button id="tabOnline" style="background: none; border: none; font-size: 1.25rem; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; padding-bottom: 8px; cursor: pointer; transition: all 0.3s;">Online Orders</button>
+            <button id="tabAnalytics" style="background: none; border: none; font-size: 1.25rem; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; padding-bottom: 8px; cursor: pointer; transition: all 0.3s;">Analytics Dashboard</button>
         </div>
 
         <div id="manualSection">
@@ -339,19 +340,6 @@
             <div class="summary-card pending">
                 <div class="summary-title">Pending Dues (Unpaid)</div>
                 <div class="summary-value" id="total-pending" style="color: #d32f2f;">₹0</div>
-            </div>
-        </div>
-
-        <!-- Charts Grid -->
-        <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px;">
-            <div class="summary-card" style="padding: 20px;">
-                <canvas id="revenueChart"></canvas>
-            </div>
-            <div class="summary-card" style="padding: 20px;">
-                <canvas id="statusChart"></canvas>
-            </div>
-            <div class="summary-card" style="padding: 20px;">
-                <canvas id="boxSizeChart"></canvas>
             </div>
         </div>
 
@@ -463,6 +451,21 @@
                     <tbody id="onlineTableBody">
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard Section -->
+        <div id="analyticsSection" style="display: none;">
+            <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px;">
+                <div class="summary-card" style="padding: 20px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+                <div class="summary-card" style="padding: 20px;">
+                    <canvas id="statusChart"></canvas>
+                </div>
+                <div class="summary-card" style="padding: 20px;">
+                    <canvas id="boxSizeChart"></canvas>
+                </div>
             </div>
         </div>
 
@@ -816,39 +819,50 @@
         // --- Tab Switching Logic ---
         const tabManual = document.getElementById('tabManual');
         const tabOnline = document.getElementById('tabOnline');
+        const tabAnalytics = document.getElementById('tabAnalytics');
+        
         const manualSection = document.getElementById('manualSection');
         const onlineSection = document.getElementById('onlineSection');
+        const analyticsSection = document.getElementById('analyticsSection');
 
         let onlineOrdersFetched = false;
 
+        function resetTabs() {
+            [tabManual, tabOnline, tabAnalytics].forEach(tab => {
+                tab.style.color = 'var(--text-muted)';
+                tab.style.fontWeight = '600';
+                tab.style.borderBottomColor = 'transparent';
+            });
+            manualSection.style.display = 'none';
+            onlineSection.style.display = 'none';
+            analyticsSection.style.display = 'none';
+        }
+
         tabManual.addEventListener('click', () => {
+            resetTabs();
             tabManual.style.color = 'var(--primary-green)';
             tabManual.style.fontWeight = '800';
             tabManual.style.borderBottomColor = 'var(--primary-green)';
-            
-            tabOnline.style.color = 'var(--text-muted)';
-            tabOnline.style.fontWeight = '600';
-            tabOnline.style.borderBottomColor = 'transparent';
-            
             manualSection.style.display = 'block';
-            onlineSection.style.display = 'none';
         });
 
         tabOnline.addEventListener('click', () => {
+            resetTabs();
             tabOnline.style.color = 'var(--primary-green)';
             tabOnline.style.fontWeight = '800';
             tabOnline.style.borderBottomColor = 'var(--primary-green)';
-            
-            tabManual.style.color = 'var(--text-muted)';
-            tabManual.style.fontWeight = '600';
-            tabManual.style.borderBottomColor = 'transparent';
-            
-            manualSection.style.display = 'none';
             onlineSection.style.display = 'block';
-            
             if (!onlineOrdersFetched) {
                 fetchOnlineOrders();
             }
+        });
+
+        tabAnalytics.addEventListener('click', () => {
+            resetTabs();
+            tabAnalytics.style.color = 'var(--primary-green)';
+            tabAnalytics.style.fontWeight = '800';
+            tabAnalytics.style.borderBottomColor = 'var(--primary-green)';
+            analyticsSection.style.display = 'block';
         });
 
         // --- Fetch & Render Online Orders ---
