@@ -66,6 +66,30 @@ const server = http.createServer((req, res) => {
             res.end();
         });
     }
+    // Serve the Login Page
+    else if (req.url === '/login.html') {
+        fs.readFile('login.html', (err, data) => {
+            if (err) {
+                res.writeHead(404);
+                return res.end("Error loading login.html");
+            }
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.write(data);
+            res.end();
+        });
+    }
+    // Serve the Login CSS
+    else if (req.url === '/login.css') {
+        fs.readFile('login.css', (err, data) => {
+            if (err) {
+                res.writeHead(404);
+                return res.end("Error loading login.css");
+            }
+            res.writeHead(200, { 'Content-Type': 'text/css' });
+            res.write(data);
+            res.end();
+        });
+    }
     // 5. Catch-all for anything else (404 Page Not Found)
     else {
         res.writeHead(404, { 'Content-Type': 'text/html' });

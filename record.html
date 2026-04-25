@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +13,7 @@
             margin: 40px auto;
             padding: 0 20px;
         }
-        
+
         /* Summary Cards */
         .summary-grid {
             display: grid;
@@ -20,20 +21,23 @@
             gap: 24px;
             margin-bottom: 40px;
         }
+
         .summary-card {
             background: #fff;
             padding: 30px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-md);
-            border: 1px solid rgba(0,0,0,0.03);
+            border: 1px solid rgba(0, 0, 0, 0.03);
             position: relative;
             overflow: hidden;
             transition: transform 0.3s ease;
         }
+
         .summary-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
         }
+
         .summary-card::before {
             content: '';
             position: absolute;
@@ -43,11 +47,24 @@
             height: 100%;
             background: var(--primary-green);
         }
+
         .summary-card.pending::before {
-            background: #ef4444; 
+            background: #ef4444;
         }
-        .summary-title { color: var(--text-muted); font-size: 1.1rem; font-weight: 500; }
-        .summary-value { font-size: 2.5rem; font-weight: 800; color: var(--text-dark); margin-top: 12px; letter-spacing: -1px; }
+
+        .summary-title {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .summary-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-top: 12px;
+            letter-spacing: -1px;
+        }
 
         /* The Form */
         .add-record-form {
@@ -60,41 +77,62 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             align-items: end;
-            border: 1px solid rgba(0,0,0,0.03);
+            border: 1px solid rgba(0, 0, 0, 0.03);
         }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
-        .form-group input, .form-group select { 
-            padding: 12px; 
-            border: 1px solid #e5e7eb; 
-            border-radius: var(--radius-md); 
-            font-size: 1rem; 
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
             background: #f9fafb;
             transition: all 0.3s ease;
             font-family: inherit;
         }
-        .form-group input:focus, .form-group select:focus {
+
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary-green);
             box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
             background: #fff;
         }
-        
-        .readonly-input { background-color: #f3f4f6 !important; cursor: not-allowed; font-weight: 800; color: var(--primary-green) !important; font-size: 1.1rem !important; }
 
-        .btn-add { 
+        .readonly-input {
+            background-color: #f3f4f6 !important;
+            cursor: not-allowed;
+            font-weight: 800;
+            color: var(--primary-green) !important;
+            font-size: 1.1rem !important;
+        }
+
+        .btn-add {
             background: linear-gradient(135deg, var(--mango-gold), var(--mango-gold-dark));
-            color: var(--text-dark); 
-            font-weight: 800; 
-            padding: 14px; 
-            border: none; 
-            border-radius: var(--radius-md); 
-            cursor: pointer; 
+            color: var(--text-dark);
+            font-weight: 800;
+            padding: 14px;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 1.1rem;
             box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
         }
-        .btn-add:hover { 
+
+        .btn-add:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
         }
@@ -106,7 +144,9 @@
             margin-bottom: 24px;
             flex-wrap: wrap;
         }
-        .search-bar, .filter-select {
+
+        .search-bar,
+        .filter-select {
             padding: 14px 20px;
             font-size: 1rem;
             border: 1px solid #e5e7eb;
@@ -117,16 +157,38 @@
             box-shadow: var(--shadow-sm);
             font-family: inherit;
         }
-        .search-bar { flex: 2; min-width: 300px; }
-        .filter-select { flex: 1; min-width: 180px; }
-        .search-bar:focus, .filter-select:focus {
+
+        .search-bar {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .filter-select {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .search-bar:focus,
+        .filter-select:focus {
             border-color: var(--primary-green);
             box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
         }
+
         .btn-clear {
-            background: var(--text-muted); color: white; border: none; padding: 14px 24px; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.3s ease;
+            background: var(--text-muted);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
-        .btn-clear:hover { background: var(--text-dark); }
+
+        .btn-clear:hover {
+            background: var(--text-dark);
+        }
 
         /* The Excel-like Table */
         .table-wrapper {
@@ -134,40 +196,128 @@
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-md);
             overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.03);
+            border: 1px solid rgba(0, 0, 0, 0.03);
         }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 18px 24px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
-        th { background-color: #f8fafc; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
-        tr { transition: background-color 0.2s; }
-        tr:hover { background-color: #f9fafb; }
-        td { font-size: 1rem; color: var(--text-dark); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 18px 24px;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        tr {
+            transition: background-color 0.2s;
+        }
+
+        tr:hover {
+            background-color: #f9fafb;
+        }
+
+        td {
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
 
         /* Interactive Badges & Buttons */
-        .badge { 
-            padding: 6px 14px; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 700; text-align: center; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; transition: all 0.2s ease; user-select: none;
+        .badge {
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
         }
-        .badge:hover { filter: brightness(0.95); transform: scale(1.02); } 
-        .badge.paid { background-color: #d1fae5; color: #065f46; }
-        .badge.unpaid { background-color: #fee2e2; color: #991b1b; }
+
+        .badge:hover {
+            filter: brightness(0.95);
+            transform: scale(1.02);
+        }
+
+        .badge.paid {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge.unpaid {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
 
         /* Action Buttons */
-        .action-btns { display: flex; gap: 10px; }
-        .edit-btn { background: #eff6ff; color: #2563eb; border: none; padding: 8px 14px; border-radius: var(--radius-md); cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; }
-        .edit-btn:hover { background: #dbeafe; }
-        .delete-btn { background: #fef2f2; color: #dc2626; border: none; padding: 8px 14px; border-radius: var(--radius-md); cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; }
-        .delete-btn:hover { background: #fee2e2; }
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-btn {
+            background: #eff6ff;
+            color: #2563eb;
+            border: none;
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .edit-btn:hover {
+            background: #dbeafe;
+        }
+
+        .delete-btn {
+            background: #fef2f2;
+            color: #dc2626;
+            border: none;
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #fee2e2;
+        }
     </style>
 </head>
+
 <body style="background-color: var(--background);">
 
     <header>
         <a href="index.html" class="logo">🥭 Jagadish Mango Farm</a>
-        <a href="index.html" style="text-decoration: none; color: var(--primary-green); font-weight: 600;">&larr; Back to Store</a>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <a href="index.html" style="text-decoration: none; color: var(--primary-green); font-weight: 600;">&larr; Back to Store</a>
+            <button id="logoutBtn" style="background: #fee2e2; color: #dc2626; border: none; padding: 8px 14px; border-radius: var(--radius-md); cursor: pointer; font-weight: 600;">Logout</button>
+        </div>
     </header>
 
     <div class="record-container">
-        <h1 style="color: var(--primary-green); margin-bottom: 30px; font-size: 2.5rem; font-weight: 800; letter-spacing: -0.5px;">Daily Sales Ledger</h1>
+        <h1
+            style="color: var(--primary-green); margin-bottom: 30px; font-size: 2.5rem; font-weight: 800; letter-spacing: -0.5px;">
+            Daily Sales Ledger</h1>
 
         <div class="summary-grid">
             <div class="summary-card">
@@ -197,9 +347,10 @@
 
             <div class="form-group">
                 <label>Phone Number</label>
-                <input type="tel" id="clientPhone" required pattern="[0-9]{10}" maxlength="10" placeholder="10-digit number">
+                <input type="tel" id="clientPhone" required pattern="[0-9]{10}" maxlength="10"
+                    placeholder="10-digit number">
             </div>
-            
+
             <div class="form-group">
                 <label>Price per KG (₹)</label>
                 <input type="number" id="pricePerKg" required min="1" value="120">
@@ -214,7 +365,8 @@
                     <option value="20">20 KG Wholesale</option>
                     <option value="manual">Enter Manual KG...</option>
                 </select>
-                <input type="number" id="manualWeight" placeholder="Enter custom KG" style="display:none; margin-top:8px;" min="0.5" step="0.5">
+                <input type="number" id="manualWeight" placeholder="Enter custom KG"
+                    style="display:none; margin-top:8px;" min="0.5" step="0.5">
             </div>
 
             <div class="form-group">
@@ -235,14 +387,16 @@
                 </select>
             </div>
 
-            <button type="submit" id="submitBtn" class="btn-add" style="grid-column: 1 / -1; width: 100%; max-width: 250px;">+ Add Record</button>
+            <button type="submit" id="submitBtn" class="btn-add"
+                style="grid-column: 1 / -1; width: 100%; max-width: 250px;">+ Add Record</button>
         </form>
 
         <div class="controls-container">
-            <input type="text" id="searchInput" class="search-bar" placeholder="🔍 Global Search: Find client in entire database...">
-            
+            <input type="text" id="searchInput" class="search-bar"
+                placeholder="🔍 Global Search: Find client in entire database...">
+
             <input type="date" id="dateFilter" class="filter-select" title="View records for a specific day">
-            
+
             <select id="statusFilter" class="filter-select">
                 <option value="All">All Statuses</option>
                 <option value="Paid">Paid Only</option>
@@ -266,7 +420,7 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    </tbody>
+                </tbody>
             </table>
         </div>
     </div>
@@ -274,10 +428,10 @@
     <script>
         const SUPABASE_URL = 'https://tmrhndrdbgszlpicsbof.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_TZr6E1V9dC-udBumRgwZgA_SHYbzAMQ';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let salesData = [];
-        let editingId = null; 
+        let editingId = null;
 
         // --- Helper: Get Today's Date in YYYY-MM-DD format ---
         function getTodayDate() {
@@ -287,7 +441,7 @@
 
         // --- Helper: Format YYYY-MM-DD to DD/MM/YYYY for reading ---
         function formatDateForDisplay(dateString) {
-            if(!dateString) return '';
+            if (!dateString) return '';
             const [year, month, day] = dateString.split('-');
             return `${day}/${month}/${year}`;
         }
@@ -299,7 +453,7 @@
         const manualWeightInput = document.getElementById('manualWeight');
         const boxQtyInput = document.getElementById('boxQty');
         const totalPriceInput = document.getElementById('totalPrice');
-        
+
         const searchInput = document.getElementById('searchInput');
         const dateFilterInput = document.getElementById('dateFilter');
         const statusFilterInput = document.getElementById('statusFilter');
@@ -311,11 +465,11 @@
 
         // --- Fetch Data from Supabase ---
         async function fetchRecords() {
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient
                 .from('sales_records')
                 .select('*')
                 .order('date', { ascending: false });
-                
+
             if (error) {
                 console.error("Error fetching data:", error);
                 alert("Could not load records from database. Did you create the sales_records table?");
@@ -326,7 +480,24 @@
         }
 
         // Load data when page loads
-        window.addEventListener('load', fetchRecords);
+        window.addEventListener('load', async () => {
+            // Secure Route Check
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                // Not logged in -> Kick to login page
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Logged in -> Load data
+            fetchRecords();
+        });
+
+        // Logout Handler
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'login.html';
+        });
 
         // --- Auto-Calculate Function ---
         function calculateTotal() {
@@ -342,7 +513,7 @@
             const pricePerKg = parseFloat(pricePerKgInput.value) || 0;
             const qty = parseInt(boxQtyInput.value) || 1;
             const total = kg * qty * pricePerKg;
-            
+
             totalPriceInput.value = total > 0 ? total : '';
         }
 
@@ -351,22 +522,22 @@
         weightSelect.addEventListener('change', calculateTotal);
         manualWeightInput.addEventListener('input', calculateTotal);
         boxQtyInput.addEventListener('input', calculateTotal);
-        
+
         searchInput.addEventListener('input', updateDashboard);
         dateFilterInput.addEventListener('change', updateDashboard);
         statusFilterInput.addEventListener('change', updateDashboard);
-        
+
         document.getElementById('showAllBtn').addEventListener('click', () => {
-            dateFilterInput.value = ''; 
-            searchInput.value = '';     
-            statusFilterInput.value = 'All'; 
+            dateFilterInput.value = '';
+            searchInput.value = '';
+            statusFilterInput.value = 'All';
             updateDashboard();
         });
 
         // --- Add / Update Record Function ---
-        document.getElementById('recordForm').addEventListener('submit', async function(e) {
-            e.preventDefault(); 
-            
+        document.getElementById('recordForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
             submitBtn.disabled = true;
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = "⏳ Saving...";
@@ -375,12 +546,12 @@
             const name = document.getElementById('clientName').value;
             const phone = document.getElementById('clientPhone').value;
             const status = document.getElementById('paymentStatus').value;
-            
+
             const pricePerKg = parseFloat(pricePerKgInput.value);
             const qty = parseInt(boxQtyInput.value);
             const price = parseFloat(totalPriceInput.value);
-            
-            if(phone.length !== 10) {
+
+            if (phone.length !== 10) {
                 alert("Please ensure the phone number is exactly 10 digits long.");
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
@@ -401,7 +572,7 @@
             };
 
             if (editingId !== null) {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('sales_records')
                     .update(newRecord)
                     .eq('id', editingId);
@@ -414,12 +585,12 @@
                         salesData[recordIndex] = { ...salesData[recordIndex], ...newRecord };
                     }
                 }
-                
+
                 editingId = null;
-                submitBtn.style.backgroundColor = ""; 
+                submitBtn.style.backgroundColor = "";
                 submitBtn.style.color = "";
             } else {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('sales_records')
                     .insert([newRecord])
                     .select();
@@ -434,12 +605,12 @@
             submitBtn.disabled = false;
             submitBtn.innerHTML = "+ Add Record";
             dateFilterInput.value = date;
-            
+
             updateDashboard();
 
             const currentPrice = pricePerKgInput.value;
             this.reset();
-            recordDateInput.value = getTodayDate(); 
+            recordDateInput.value = getTodayDate();
             pricePerKgInput.value = currentPrice;
             boxQtyInput.value = 1;
             manualWeightInput.style.display = 'none';
@@ -470,7 +641,7 @@
 
             editingId = id;
             submitBtn.innerHTML = "💾 Update Record";
-            submitBtn.style.backgroundColor = "#1b4332"; 
+            submitBtn.style.backgroundColor = "#1b4332";
             submitBtn.style.color = "white";
 
             document.querySelector('.add-record-form').scrollIntoView({ behavior: 'smooth' });
@@ -478,12 +649,12 @@
 
         // --- DELETE Record Function ---
         async function deleteRecord(id) {
-            if(confirm("Are you sure you want to delete this record?")) {
-                const { error } = await supabase
+            if (confirm("Are you sure you want to delete this record?")) {
+                const { error } = await supabaseClient
                     .from('sales_records')
                     .delete()
                     .eq('id', id);
-                    
+
                 if (error) {
                     alert("Error deleting record: " + error.message);
                 } else {
@@ -496,19 +667,19 @@
         // --- Toggle Status Function ---
         async function toggleStatus(id) {
             const record = salesData.find(record => record.id === id);
-            if(record) {
+            if (record) {
                 const newStatus = record.status === 'Paid' ? 'Unpaid' : 'Paid';
-                
+
                 // Optimistic UI update
                 record.status = newStatus;
                 updateDashboard();
-                
+
                 // Update in DB
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('sales_records')
                     .update({ status: newStatus })
                     .eq('id', id);
-                    
+
                 if (error) {
                     alert("Error updating status: " + error.message);
                     // Revert on failure
@@ -521,15 +692,15 @@
         // --- Update Screen Function ---
         function updateDashboard() {
             const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = ''; 
+            tbody.innerHTML = '';
 
             const searchTerm = searchInput.value.toLowerCase();
             const filterDate = dateFilterInput.value;
-            const filterStatus = statusFilterInput.value; 
+            const filterStatus = statusFilterInput.value;
 
             let totalKg = 0;
             let totalRev = 0;
-            let totalPending = 0; 
+            let totalPending = 0;
 
             const filteredData = salesData.filter(record => {
                 if (filterStatus !== 'All' && record.status !== filterStatus) {
@@ -541,14 +712,14 @@
                 if (filterDate !== "") {
                     return record.date === filterDate;
                 }
-                return true; 
+                return true;
             });
 
             filteredData.forEach(record => {
                 const orderTotalKg = record.baseKg * record.qty;
                 totalKg += orderTotalKg;
-                
-                if(record.status === 'Paid') {
+
+                if (record.status === 'Paid') {
                     totalRev += record.price;
                 } else {
                     totalPending += record.price;
@@ -578,7 +749,7 @@
                         </div>
                     </td>
                 </tr>`;
-                
+
                 tbody.innerHTML += row;
             });
 
@@ -588,4 +759,5 @@
         }
     </script>
 </body>
+
 </html>
