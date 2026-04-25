@@ -7,6 +7,7 @@
     <title>Sales Record | Jagadish Mango Farm</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .record-container {
             max-width: 1400px;
@@ -338,6 +339,19 @@
             <div class="summary-card pending">
                 <div class="summary-title">Pending Dues (Unpaid)</div>
                 <div class="summary-value" id="total-pending" style="color: #d32f2f;">₹0</div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px;">
+            <div class="summary-card" style="padding: 20px;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+            <div class="summary-card" style="padding: 20px;">
+                <canvas id="statusChart"></canvas>
+            </div>
+            <div class="summary-card" style="padding: 20px;">
+                <canvas id="boxSizeChart"></canvas>
             </div>
         </div>
 
@@ -792,6 +806,11 @@
             document.getElementById('total-kg').innerText = totalKg + ' kg';
             document.getElementById('total-revenue').innerText = '₹' + totalRev.toLocaleString('en-IN');
             document.getElementById('total-pending').innerText = '₹' + totalPending.toLocaleString('en-IN');
+            
+            // Update the charts with the new filtered data
+            if (typeof updateCharts === 'function') {
+                updateCharts(filteredData);
+            }
         }
 
         // --- Tab Switching Logic ---
@@ -871,6 +890,81 @@
                 });
             }
         }
+
+        // --- Chart.js Initialization & Updating Logic ---
+        let revenueChartInstance = null;
+        let statusChartInstance = null;
+        let boxSizeChartInstance = null;
+
+        function initCharts() {
+            // Wait for DOM
+            if(!document.getElementById('revenueChart')) return;
+
+            const revCtx = document.getElementById('revenueChart').getContext('2d');
+            revenueChartInstance = new Chart(revCtx, {
+                type: 'line',
+                data: { labels: [], datasets: [{ label: 'Revenue (₹)', data: [], borderColor: '#2E7D32', backgroundColor: 'rgba(46, 125, 50, 0.1)', tension: 0.4, fill: true }] },
+                options: { responsive: true, plugins: { title: { display: true, text: 'Revenue Trend (Daily)' } } }
+            });
+
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            statusChartInstance = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: { labels: ['Paid (₹)', 'Unpaid (₹)'], datasets: [{ data: [0, 0], backgroundColor: ['#2E7D32', '#ef4444'], borderWidth: 0 }] },
+                options: { responsive: true, plugins: { title: { display: true, text: 'Revenue Collection Status' } } }
+            });
+
+            const boxCtx = document.getElementById('boxSizeChart').getContext('2d');
+            boxSizeChartInstance = new Chart(boxCtx, {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'Boxes Sold', data: [], backgroundColor: '#f59e0b', borderRadius: 4 }] },
+                options: { responsive: true, plugins: { title: { display: true, text: 'Popular Box Sizes' } }, scales: { y: { beginAtZero: true } } }
+            });
+        }
+
+        function updateCharts(data) {
+            if (!revenueChartInstance) initCharts();
+            if (!revenueChartInstance) return;
+
+            // Process Data
+            const revenueByDate = {};
+            let paidCount = 0, unpaidCount = 0;
+            const boxCount = {};
+
+            data.forEach(record => {
+                // Revenue Trend
+                revenueByDate[record.date] = (revenueByDate[record.date] || 0) + record.price;
+                
+                // Status Ratio (by value)
+                if (record.status === 'Paid') paidCount += record.price;
+                else unpaidCount += record.price;
+
+                // Box Size popularity
+                const sizeLabel = record.baseKg + ' KG';
+                boxCount[sizeLabel] = (boxCount[sizeLabel] || 0) + record.qty;
+            });
+
+            // Update Line Chart (Chronological Order)
+            const sortedDates = Object.keys(revenueByDate).sort();
+            revenueChartInstance.data.labels = sortedDates;
+            revenueChartInstance.data.datasets[0].data = sortedDates.map(date => revenueByDate[date]);
+            revenueChartInstance.update();
+
+            // Update Doughnut Chart
+            statusChartInstance.data.datasets[0].data = [paidCount, unpaidCount];
+            statusChartInstance.update();
+
+            // Update Bar Chart
+            const sortedSizes = Object.keys(boxCount).sort((a,b) => parseFloat(a) - parseFloat(b));
+            boxSizeChartInstance.data.labels = sortedSizes;
+            boxSizeChartInstance.data.datasets[0].data = sortedSizes.map(size => boxCount[size]);
+            boxSizeChartInstance.update();
+        }
+
+        // Initialize empty charts so they are ready when fetchRecords completes
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+        });
     </script>
 </body>
 </html>
