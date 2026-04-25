@@ -125,6 +125,9 @@
         const SUPABASE_KEY = 'sb_publishable_TZr6E1V9dC-udBumRgwZgA_SHYbzAMQ';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+        // 🥭 REPLACE THIS WITH YOUR SUPABASE USER ID
+        const FARM_OWNER_ID = 'YOUR_SUPABASE_USER_ID_HERE';
+
         let finalGrandTotal = 0;
 
         // Function to calculate and update all cart totals
@@ -238,6 +241,7 @@
 
             // Send to Supabase
             const newOrder = {
+                user_id: FARM_OWNER_ID,
                 customer_name: customerName,
                 customer_phone: customerPhone,
                 shipping_address: shippingAddress,

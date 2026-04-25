@@ -316,8 +316,15 @@
 
     <div class="record-container">
         <h1
-            style="color: var(--primary-green); margin-bottom: 30px; font-size: 2.5rem; font-weight: 800; letter-spacing: -0.5px;">
-            Daily Sales Ledger</h1>
+            style="color: var(--primary-green); margin-bottom: 20px; font-size: 2.5rem; font-weight: 800; letter-spacing: -0.5px;">
+            Sales Dashboard</h1>
+
+        <div class="dashboard-tabs" style="display: flex; gap: 30px; margin-bottom: 30px; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px;">
+            <button id="tabManual" style="background: none; border: none; font-size: 1.25rem; font-weight: 800; color: var(--primary-green); border-bottom: 3px solid var(--primary-green); padding-bottom: 8px; cursor: pointer; transition: all 0.3s;">Manual Sales Ledger</button>
+            <button id="tabOnline" style="background: none; border: none; font-size: 1.25rem; font-weight: 600; color: var(--text-muted); border-bottom: 3px solid transparent; padding-bottom: 8px; cursor: pointer; transition: all 0.3s;">Online Orders</button>
+        </div>
+
+        <div id="manualSection">
 
         <div class="summary-grid">
             <div class="summary-card">
@@ -423,6 +430,28 @@
                 </tbody>
             </table>
         </div>
+        </div> <!-- End manualSection -->
+
+        <!-- Online Orders Section -->
+        <div id="onlineSection" style="display: none;">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order Date</th>
+                            <th>Customer Name</th>
+                            <th>Contact</th>
+                            <th>Shipping Address</th>
+                            <th>Items Summary</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="onlineTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -764,7 +793,84 @@
             document.getElementById('total-revenue').innerText = '₹' + totalRev.toLocaleString('en-IN');
             document.getElementById('total-pending').innerText = '₹' + totalPending.toLocaleString('en-IN');
         }
+
+        // --- Tab Switching Logic ---
+        const tabManual = document.getElementById('tabManual');
+        const tabOnline = document.getElementById('tabOnline');
+        const manualSection = document.getElementById('manualSection');
+        const onlineSection = document.getElementById('onlineSection');
+
+        let onlineOrdersFetched = false;
+
+        tabManual.addEventListener('click', () => {
+            tabManual.style.color = 'var(--primary-green)';
+            tabManual.style.fontWeight = '800';
+            tabManual.style.borderBottomColor = 'var(--primary-green)';
+            
+            tabOnline.style.color = 'var(--text-muted)';
+            tabOnline.style.fontWeight = '600';
+            tabOnline.style.borderBottomColor = 'transparent';
+            
+            manualSection.style.display = 'block';
+            onlineSection.style.display = 'none';
+        });
+
+        tabOnline.addEventListener('click', () => {
+            tabOnline.style.color = 'var(--primary-green)';
+            tabOnline.style.fontWeight = '800';
+            tabOnline.style.borderBottomColor = 'var(--primary-green)';
+            
+            tabManual.style.color = 'var(--text-muted)';
+            tabManual.style.fontWeight = '600';
+            tabManual.style.borderBottomColor = 'transparent';
+            
+            manualSection.style.display = 'none';
+            onlineSection.style.display = 'block';
+            
+            if (!onlineOrdersFetched) {
+                fetchOnlineOrders();
+            }
+        });
+
+        // --- Fetch & Render Online Orders ---
+        async function fetchOnlineOrders() {
+            const tbody = document.getElementById('onlineTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #777;">Loading online orders...</td></tr>';
+
+            const { data, error } = await supabaseClient
+                .from('customer_orders')
+                .select('*')
+                .eq('user_id', currentUserId)
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error("Error fetching online orders:", error);
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 40px; color: red;">Error loading online orders.</td></tr>`;
+            } else {
+                onlineOrdersFetched = true;
+                
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #777;">No online orders yet.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                data.forEach(order => {
+                    const dateObj = new Date(order.created_at);
+                    const displayDate = dateObj.toLocaleDateString('en-IN') + ' ' + dateObj.toLocaleTimeString('en-IN', {hour: '2-digit', minute:'2-digit'});
+
+                    const row = `<tr>
+                        <td style="font-size: 0.9rem; color: #666;">${displayDate}<br><b style="color:var(--primary-green);">#${order.id}</b></td>
+                        <td><strong>${order.customer_name}</strong></td>
+                        <td>${order.customer_phone}</td>
+                        <td style="max-width: 250px; font-size: 0.9rem;">${order.shipping_address}</td>
+                        <td style="max-width: 300px; font-size: 0.95rem;">${order.items_summary}</td>
+                        <td style="font-weight: bold; color: var(--primary-green);">₹${order.total_price.toLocaleString('en-IN')}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            }
+        }
     </script>
 </body>
-
 </html>
