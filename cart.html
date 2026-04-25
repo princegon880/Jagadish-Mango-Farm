@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart | Jagadish Mango Farm</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cart.css">
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">🥭 Jagadish Mango Farm</a>
+        <a href="index.html" class="back-link">&larr; Continue Shopping</a>
+    </header>
+
+    <main class="cart-wrapper">
+        <div class="cart-header">
+            <h1>Your Shopping Cart</h1>
+            <p class="item-count">You have <span id="total-count">0</span> items in your cart.</p>
+        </div>
+
+        <div class="cart-content">
+            <div class="cart-items" id="cart-items-container">
+                
+                <div class="cart-item" data-price="1200">
+                    <img src="https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Kesar Mangoes" class="item-image">
+                    <div class="item-details">
+                        <h3>Premium Kesar - 1 Dozen</h3>
+                        <p class="item-weight">Approx. 2.5 - 3 kg</p>
+                    </div>
+                    <div class="item-quantity">
+                        <label for="qty1">Qty:</label>
+                        <input type="number" id="qty1" class="qty-input" value="1" min="1">
+                    </div>
+                    <div class="item-price">₹1,200</div>
+                    <button class="remove-btn" title="Remove item">🗑️</button>
+                </div>
+
+                <div class="cart-item" data-price="850">
+                    <img src="https://images.unsplash.com/photo-1618361099192-3bc17e2962cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Mango Pulp" class="item-image">
+                    <div class="item-details">
+                        <h3>100% Pure Kesar Pulp</h3>
+                        <p class="item-weight">1 Litre Jar</p>
+                    </div>
+                    <div class="item-quantity">
+                        <label for="qty2">Qty:</label>
+                        <input type="number" id="qty2" class="qty-input" value="2" min="1">
+                    </div>
+                    <div class="item-price">₹1,700</div>
+                    <button class="remove-btn" title="Remove item">🗑️</button>
+                </div>
+
+            </div>
+
+            <div class="cart-summary">
+                <h2>Order Summary</h2>
+                
+                <div class="summary-row">
+                    <span>Subtotal (<span id="summary-count">0</span> items)</span>
+                    <span id="summary-subtotal">₹0</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Estimated Shipping</span>
+                    <span id="summary-shipping">₹150</span>
+                </div>
+                
+                <div class="summary-row text-muted">
+                    <span>Tax (5% GST)</span>
+                    <span id="summary-tax">₹0</span>
+                </div>
+                
+                <hr class="summary-divider">
+                
+                <div class="summary-row total-row">
+                    <span>Total</span>
+                    <span id="summary-total">₹0</span>
+                </div>
+
+                <p class="secure-checkout-text">🔒 Secure Checkout Guaranteed</p>
+                
+                <button class="checkout-btn">Proceed to Checkout</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Function to calculate and update all cart totals
+        function updateCart() {
+            let subtotal = 0;
+            let totalItems = 0;
+            const items = document.querySelectorAll('.cart-item');
+
+            items.forEach(item => {
+                // Get the base price from the data attribute and the current quantity
+                const basePrice = parseFloat(item.getAttribute('data-price'));
+                const qtyInput = item.querySelector('.qty-input');
+                let qty = parseInt(qtyInput.value);
+
+                // Prevent quantity from dropping below 1
+                if (qty < 1 || isNaN(qty)) {
+                    qty = 1;
+                    qtyInput.value = 1;
+                }
+
+                // Calculate total for this specific item row
+                const itemTotal = basePrice * qty;
+                subtotal += itemTotal;
+                totalItems += qty;
+
+                // Update the price displayed on the row (formatted with commas)
+                item.querySelector('.item-price').innerText = '₹' + itemTotal.toLocaleString('en-IN');
+            });
+
+            // Calculate Shipping, Tax, and Final Total
+            // If the cart is empty, shipping should be 0
+            const shipping = subtotal > 0 ? 150 : 0; 
+            const tax = subtotal * 0.05; // 5% GST
+            const grandTotal = subtotal + shipping + Math.round(tax);
+
+            // Update the DOM elements with the new values
+            document.getElementById('total-count').innerText = totalItems;
+            document.getElementById('summary-count').innerText = totalItems;
+            
+            document.getElementById('summary-subtotal').innerText = '₹' + subtotal.toLocaleString('en-IN');
+            document.getElementById('summary-shipping').innerText = '₹' + shipping.toLocaleString('en-IN');
+            document.getElementById('summary-tax').innerText = '₹' + Math.round(tax).toLocaleString('en-IN');
+            document.getElementById('summary-total').innerText = '₹' + grandTotal.toLocaleString('en-IN');
+
+            // Optional: If cart is totally empty, show a message
+            if (totalItems === 0) {
+                document.getElementById('cart-items-container').innerHTML = '<p style="padding: 20px; color: #777;">Your cart is currently empty. <br><br> <a href="index.html" style="color: #2E7D32; font-weight:bold;">Go add some Kesar Mangoes!</a></p>';
+            }
+        }
+
+        // Add event listeners to all "Remove" buttons
+        document.querySelectorAll('.remove-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove the HTML element from the page
+                this.closest('.cart-item').remove();
+                // Recalculate totals
+                updateCart();
+            });
+        });
+
+        // Add event listeners to all quantity inputs
+        document.querySelectorAll('.qty-input').forEach(input => {
+            // Update when clicking the up/down arrows or typing a number
+            input.addEventListener('change', updateCart);
+            input.addEventListener('keyup', updateCart);
+        });
+
+        // Run the calculation once right when the page loads
+        updateCart();
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jagadish Mango Farm | Authentic Gir Kesar Mangoes</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">🥭 Jagadish Mango Farm</a>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">Our Farm</a></li>
+                <li><a href="#shop">Shop Fresh</a></li>
+                <li><a href="record.html">Record</a></li>
+            </ul>
+        </nav>
+        <a href="cart.html" class="cart-btn">Cart (0)</a>
+    </header>
+
+    <section class="hero" id="home">
+        <h1>Authentic Gir Kesar Mangoes</h1>
+        <p>Grown in the rich soils of Piyava Gir, right beside the Gir National Park. Delivered farm-fresh directly to your doorstep.</p>
+        <button class="cta-button" onclick="document.getElementById('shop').scrollIntoView({behavior: 'smooth'})">
+            Pre-Order the Season's Best
+        </button>
+    </section>
+
+    <section class="about-section" id="about">
+        <h2>From the Heart of Gir National Park</h2>
+        <p>At Jagadish Mango Farm, we take pride in our heritage. Located in Piyava Gir, our orchards benefit from the unique microclimate of the Gir forest region. We use sustainable farming practices to ensure that every Kesar mango you eat is chemical-free, naturally ripened, and bursting with the true taste of Gujarat.</p>
+    </section>
+
+    <section class="products" id="shop">
+        <h2 class="section-title">Shop Our Harvest</h2>
+        <div class="product-grid">
+            
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Kesar Mangoes 1 Dozen" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">Premium Kesar - 1 Dozen</h3>
+                    <p>Hand-picked, naturally ripened, A-grade Gir Kesar.</p>
+                    <div class="product-price">₹1,200</div>
+                    <button class="add-to-cart" onclick="addToCart()">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1591073113125-e46713c829ed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Kesar Mangoes 10kg" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">Family Box - 10 kg</h3>
+                    <p>Perfect for sharing. Semi-ripe mangoes packed safely in hay.</p>
+                    <div class="product-price">₹3,500</div>
+                    <button class="add-to-cart" onclick="addToCart()">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1618361099192-3bc17e2962cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Mango Pulp" class="product-img">
+                <div class="product-info">
+                    <h3 class="product-title">100% Pure Kesar Pulp</h3>
+                    <p>No added sugar or preservatives. Just pure Gir Kesar.</p>
+                    <div class="product-price">₹850 / Litre</div>
+                    <button class="add-to-cart" onclick="addToCart()">Add to Cart</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <h2>Jagadish Mango Farm</h2>
+        <p>Piyava Gir, near Gir National Park, Gujarat, India</p>
+        <p>&copy; 2026 Jagadish Trading Company. All rights reserved.</p>
+    </footer>
+
+    <div id="toast">Added to your cart! 🥭</div>
+
+    <script>
+        let cartCount = 0;
+
+        function addToCart() {
+            // Update cart number
+            cartCount++;
+            document.querySelector('.cart-btn').innerText = `Cart (${cartCount})`;
+
+            // Show popup notification
+            const toast = document.getElementById("toast");
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+    </script>
+
+</body>
+</html>
