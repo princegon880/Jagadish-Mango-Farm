@@ -432,6 +432,7 @@
 
         let salesData = [];
         let editingId = null;
+        let currentUserId = null;
 
         // --- Helper: Get Today's Date in YYYY-MM-DD format ---
         function getTodayDate() {
@@ -465,9 +466,11 @@
 
         // --- Fetch Data from Supabase ---
         async function fetchRecords() {
+            // Only fetch records that belong to the current user
             const { data, error } = await supabaseClient
                 .from('sales_records')
                 .select('*')
+                .eq('user_id', currentUserId)
                 .order('date', { ascending: false });
 
             if (error) {
@@ -488,6 +491,9 @@
                 window.location.href = 'login.html';
                 return;
             }
+            
+            // Store the logged-in user's ID for multi-tenant isolation
+            currentUserId = session.user.id;
             
             // Logged in -> Load data
             fetchRecords();
@@ -561,6 +567,7 @@
             let baseKg = weightSelect.value === 'manual' ? parseFloat(manualWeightInput.value) : parseFloat(weightSelect.value);
 
             const newRecord = {
+                user_id: currentUserId,
                 date: date,
                 name: name,
                 phone: phone,
