@@ -120,7 +120,7 @@
                 signupBtn.disabled = false;
                 signupBtn.innerText = "Sign Up (New Admin)";
             } else {
-                showSuccess("Signup successful! You can now log in.");
+                showSuccess("Signup successful! If it didn't redirect, please check your email for a confirmation link (or turn off 'Confirm Email' in Supabase).");
                 // If email confirmation is off, they might be logged in automatically
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 if(session) {

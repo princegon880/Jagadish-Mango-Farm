@@ -6,6 +6,7 @@
     <title>Your Cart | Jagadish Mango Farm</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="cart.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -80,12 +81,52 @@
 
                 <p class="secure-checkout-text">🔒 Secure Checkout Guaranteed</p>
                 
-                <button class="checkout-btn">Proceed to Checkout</button>
+                <button class="checkout-btn" id="openCheckoutBtn">Proceed to Checkout</button>
             </div>
         </div>
     </main>
 
+    <!-- Success Screen -->
+    <main class="success-screen" id="successScreen">
+        <h1>🎉 Order Received!</h1>
+        <p>Thank you for choosing Jagadish Mango Farm. Your fresh mangoes will be on their way soon!</p>
+        <div class="order-id-badge">Order ID: <span id="displayOrderId">#12345</span></div>
+        <br>
+        <a href="index.html" class="checkout-btn" style="text-decoration: none; display: inline-block; width: auto; padding: 14px 40px;">Return to Farm</a>
+    </main>
+
+    <!-- Checkout Modal -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="checkout-modal">
+            <div class="modal-header">
+                <h2>Shipping Details</h2>
+                <button class="close-modal" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="checkoutForm" class="checkout-form">
+                <div class="form-group">
+                    <label for="customerName">Full Name</label>
+                    <input type="text" id="customerName" required placeholder="e.g. Ramesh Bhai">
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Phone Number</label>
+                    <input type="tel" id="customerPhone" required pattern="[0-9]{10}" placeholder="10-digit number">
+                </div>
+                <div class="form-group">
+                    <label for="shippingAddress">Delivery Address</label>
+                    <textarea id="shippingAddress" required placeholder="Full street address, City, State, Pincode"></textarea>
+                </div>
+                <button type="submit" id="submitOrderBtn" class="submit-order-btn">Confirm Order</button>
+            </form>
+        </div>
+    </div>
+
     <script>
+        const SUPABASE_URL = 'https://tmrhndrdbgszlpicsbof.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_TZr6E1V9dC-udBumRgwZgA_SHYbzAMQ';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let finalGrandTotal = 0;
+
         // Function to calculate and update all cart totals
         function updateCart() {
             let subtotal = 0;
@@ -93,66 +134,142 @@
             const items = document.querySelectorAll('.cart-item');
 
             items.forEach(item => {
-                // Get the base price from the data attribute and the current quantity
                 const basePrice = parseFloat(item.getAttribute('data-price'));
                 const qtyInput = item.querySelector('.qty-input');
                 let qty = parseInt(qtyInput.value);
 
-                // Prevent quantity from dropping below 1
                 if (qty < 1 || isNaN(qty)) {
                     qty = 1;
                     qtyInput.value = 1;
                 }
 
-                // Calculate total for this specific item row
                 const itemTotal = basePrice * qty;
                 subtotal += itemTotal;
                 totalItems += qty;
 
-                // Update the price displayed on the row (formatted with commas)
                 item.querySelector('.item-price').innerText = '₹' + itemTotal.toLocaleString('en-IN');
             });
 
-            // Calculate Shipping, Tax, and Final Total
-            // If the cart is empty, shipping should be 0
             const shipping = subtotal > 0 ? 150 : 0; 
             const tax = subtotal * 0.05; // 5% GST
-            const grandTotal = subtotal + shipping + Math.round(tax);
+            finalGrandTotal = subtotal + shipping + Math.round(tax);
 
-            // Update the DOM elements with the new values
             document.getElementById('total-count').innerText = totalItems;
             document.getElementById('summary-count').innerText = totalItems;
             
             document.getElementById('summary-subtotal').innerText = '₹' + subtotal.toLocaleString('en-IN');
             document.getElementById('summary-shipping').innerText = '₹' + shipping.toLocaleString('en-IN');
             document.getElementById('summary-tax').innerText = '₹' + Math.round(tax).toLocaleString('en-IN');
-            document.getElementById('summary-total').innerText = '₹' + grandTotal.toLocaleString('en-IN');
+            document.getElementById('summary-total').innerText = '₹' + finalGrandTotal.toLocaleString('en-IN');
 
-            // Optional: If cart is totally empty, show a message
+            const openCheckoutBtn = document.getElementById('openCheckoutBtn');
             if (totalItems === 0) {
                 document.getElementById('cart-items-container').innerHTML = '<p style="padding: 20px; color: #777;">Your cart is currently empty. <br><br> <a href="index.html" style="color: #2E7D32; font-weight:bold;">Go add some Kesar Mangoes!</a></p>';
+                openCheckoutBtn.disabled = true;
+                openCheckoutBtn.style.opacity = '0.5';
+                openCheckoutBtn.style.cursor = 'not-allowed';
+            } else {
+                openCheckoutBtn.disabled = false;
+                openCheckoutBtn.style.opacity = '1';
+                openCheckoutBtn.style.cursor = 'pointer';
             }
         }
 
-        // Add event listeners to all "Remove" buttons
-        document.querySelectorAll('.remove-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                // Remove the HTML element from the page
-                this.closest('.cart-item').remove();
-                // Recalculate totals
+        // Event listeners for remove and quantity
+        document.querySelector('.cart-content').addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-btn')) {
+                e.target.closest('.cart-item').remove();
                 updateCart();
-            });
+            }
         });
 
-        // Add event listeners to all quantity inputs
-        document.querySelectorAll('.qty-input').forEach(input => {
-            // Update when clicking the up/down arrows or typing a number
-            input.addEventListener('change', updateCart);
-            input.addEventListener('keyup', updateCart);
+        document.querySelector('.cart-content').addEventListener('input', function(e) {
+            if (e.target.classList.contains('qty-input')) {
+                updateCart();
+            }
         });
 
-        // Run the calculation once right when the page loads
+        // Initialize cart calculation
         updateCart();
+
+        // --- Modal & Checkout Logic ---
+        const checkoutModal = document.getElementById('checkoutModal');
+        const openCheckoutBtn = document.getElementById('openCheckoutBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const checkoutForm = document.getElementById('checkoutForm');
+        const submitOrderBtn = document.getElementById('submitOrderBtn');
+
+        openCheckoutBtn.addEventListener('click', () => {
+            checkoutModal.classList.add('active');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            checkoutModal.classList.remove('active');
+        });
+
+        // Close modal if clicked outside
+        checkoutModal.addEventListener('click', (e) => {
+            if (e.target === checkoutModal) checkoutModal.classList.remove('active');
+        });
+
+        checkoutForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Gather cart items into a summary string
+            const items = document.querySelectorAll('.cart-item');
+            let itemsSummaryArray = [];
+            
+            items.forEach(item => {
+                const title = item.querySelector('h3').innerText;
+                const qty = item.querySelector('.qty-input').value;
+                itemsSummaryArray.push(`${qty}x ${title}`);
+            });
+            
+            const itemsSummary = itemsSummaryArray.join(', ');
+
+            // Get Form Data
+            const customerName = document.getElementById('customerName').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const shippingAddress = document.getElementById('shippingAddress').value;
+
+            // Loading state
+            submitOrderBtn.disabled = true;
+            submitOrderBtn.innerText = "Processing Order...";
+
+            // Send to Supabase
+            const newOrder = {
+                customer_name: customerName,
+                customer_phone: customerPhone,
+                shipping_address: shippingAddress,
+                items_summary: itemsSummary,
+                total_price: finalGrandTotal
+            };
+
+            const { data, error } = await supabaseClient
+                .from('customer_orders')
+                .insert([newOrder])
+                .select();
+
+            if (error) {
+                alert("Error placing order: " + error.message);
+                submitOrderBtn.disabled = false;
+                submitOrderBtn.innerText = "Confirm Order";
+            } else {
+                // Success!
+                checkoutModal.classList.remove('active');
+                document.querySelector('.cart-wrapper').style.display = 'none';
+                
+                const successScreen = document.getElementById('successScreen');
+                const orderIdDisplay = document.getElementById('displayOrderId');
+                
+                // Show order ID if returned from DB
+                if(data && data.length > 0) {
+                    orderIdDisplay.innerText = '#' + data[0].id;
+                }
+                
+                successScreen.style.display = 'block';
+            }
+        });
     </script>
 </body>
 </html>
