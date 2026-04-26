@@ -413,6 +413,8 @@
             </select>
 
             <button id="showAllBtn" class="btn-clear">Clear Filters</button>
+            <button id="downloadFilteredCsvBtn" class="btn-clear" style="background-color: #e0f2f1; color: #00695c; font-weight: bold; border: 1px solid #00695c;">⬇️ Current View CSV</button>
+            <button id="downloadAllCsvBtn" class="btn-clear" style="background-color: #e3f2fd; color: #1565c0; font-weight: bold; border: 1px solid #1565c0;">⬇️ All Data CSV</button>
         </div>
 
         <div class="table-wrapper">
@@ -1002,6 +1004,78 @@
             boxSizeChartInstance.data.labels = sortedSizes;
             boxSizeChartInstance.data.datasets[0].data = sortedSizes.map(size => boxCount[size]);
             boxSizeChartInstance.update();
+        }
+
+        // --- CSV Download Logic ---
+        function convertToCSV(dataArray) {
+            const headers = ['Date', 'Client Name', 'Phone', 'Price per KG', 'Base KG', 'Qty', 'Total KG', 'Total Price', 'Status'];
+            const rows = dataArray.map(record => {
+                const name = record.name ? record.name.toString().replace(/"/g, '""') : '';
+                const phone = record.phone ? record.phone.toString().replace(/"/g, '""') : '';
+                const totalKg = record.baseKg * record.qty;
+                return [
+                    record.date,
+                    `"${name}"`,
+                    `"${phone}"`,
+                    record.pricePerKg,
+                    record.baseKg,
+                    record.qty,
+                    totalKg,
+                    record.price,
+                    record.status
+                ];
+            });
+            
+            return [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        }
+
+        function downloadCSV(csvContent, filename) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", filename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        if (document.getElementById('downloadFilteredCsvBtn')) {
+            document.getElementById('downloadFilteredCsvBtn').addEventListener('click', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filterDate = dateFilterInput.value;
+                const filterStatus = statusFilterInput.value;
+
+                const filteredData = salesData.filter(record => {
+                    if (filterStatus !== 'All' && record.status !== filterStatus) return false;
+                    if (searchTerm !== "" && !record.name.toLowerCase().includes(searchTerm) && !record.phone.includes(searchTerm)) return false;
+                    if (filterDate !== "" && record.date !== filterDate) return false;
+                    return true;
+                });
+
+                if (filteredData.length === 0) {
+                    alert("No data available to download for the current filters.");
+                    return;
+                }
+
+                const csvStr = convertToCSV(filteredData);
+                let filename = `sales_data_${filterDate || 'filtered'}.csv`;
+                downloadCSV(csvStr, filename);
+            });
+        }
+
+        if (document.getElementById('downloadAllCsvBtn')) {
+            document.getElementById('downloadAllCsvBtn').addEventListener('click', () => {
+                if (salesData.length === 0) {
+                    alert("No data available to download.");
+                    return;
+                }
+                const csvStr = convertToCSV(salesData);
+                downloadCSV(csvStr, 'sales_data_all.csv');
+            });
         }
 
         // Initialize empty charts so they are ready when fetchRecords completes
