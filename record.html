@@ -751,9 +751,21 @@
             const filterDate = dateFilterInput.value;
             const filterStatus = statusFilterInput.value;
 
-            let totalKg = 0;
-            let totalRev = 0;
-            let totalPending = 0;
+            // Calculate GLOBAL totals across all data
+            let globalTotalKg = 0;
+            let globalTotalRev = 0;
+            let globalTotalPending = 0;
+
+            salesData.forEach(record => {
+                const orderTotalKg = record.baseKg * record.qty;
+                globalTotalKg += orderTotalKg;
+
+                if (record.status === 'Paid') {
+                    globalTotalRev += record.price;
+                } else {
+                    globalTotalPending += record.price;
+                }
+            });
 
             const filteredData = salesData.filter(record => {
                 if (filterStatus !== 'All' && record.status !== filterStatus) {
@@ -770,14 +782,6 @@
 
             filteredData.forEach(record => {
                 const orderTotalKg = record.baseKg * record.qty;
-                totalKg += orderTotalKg;
-
-                if (record.status === 'Paid') {
-                    totalRev += record.price;
-                } else {
-                    totalPending += record.price;
-                }
-
                 const badgeClass = record.status === 'Paid' ? 'badge paid' : 'badge unpaid';
                 const displayDate = formatDateForDisplay(record.date);
 
@@ -806,9 +810,9 @@
                 tbody.innerHTML += row;
             });
 
-            document.getElementById('total-kg').innerText = totalKg + ' kg';
-            document.getElementById('total-revenue').innerText = '₹' + totalRev.toLocaleString('en-IN');
-            document.getElementById('total-pending').innerText = '₹' + totalPending.toLocaleString('en-IN');
+            document.getElementById('total-kg').innerText = globalTotalKg + ' kg';
+            document.getElementById('total-revenue').innerText = '₹' + globalTotalRev.toLocaleString('en-IN');
+            document.getElementById('total-pending').innerText = '₹' + globalTotalPending.toLocaleString('en-IN');
             
             // Update the charts with the new filtered data
             if (typeof updateCharts === 'function') {
