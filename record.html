@@ -456,6 +456,14 @@
 
         <!-- Analytics Dashboard Section -->
         <div id="analyticsSection" style="display: none;">
+            <div class="controls-container" style="margin-bottom: 24px; background: #fff; padding: 20px; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);">
+                <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; width: 100%;">
+                    <strong style="color: var(--text-dark); font-size: 1.1rem;">Analytics Date Filter:</strong>
+                    <input type="date" id="analyticsDateFilter" class="filter-select" title="View charts for a specific day" style="flex: 1; max-width: 200px;">
+                    <button id="analyticsShowAllBtn" class="btn-clear" style="background: var(--primary-green);">Show All Records</button>
+                </div>
+            </div>
+
             <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px;">
                 <div class="summary-card" style="padding: 20px;">
                     <canvas id="revenueChart"></canvas>
@@ -509,6 +517,7 @@
         // Set defaults to today
         recordDateInput.value = getTodayDate();
         dateFilterInput.value = getTodayDate();
+        document.getElementById('analyticsDateFilter').value = getTodayDate();
 
         // --- Fetch Data from Supabase ---
         async function fetchRecords() {
@@ -576,13 +585,29 @@
         boxQtyInput.addEventListener('input', calculateTotal);
 
         searchInput.addEventListener('input', updateDashboard);
-        dateFilterInput.addEventListener('change', updateDashboard);
+        dateFilterInput.addEventListener('change', () => {
+            document.getElementById('analyticsDateFilter').value = dateFilterInput.value;
+            updateDashboard();
+        });
         statusFilterInput.addEventListener('change', updateDashboard);
 
         document.getElementById('showAllBtn').addEventListener('click', () => {
             dateFilterInput.value = '';
+            document.getElementById('analyticsDateFilter').value = '';
             searchInput.value = '';
             statusFilterInput.value = 'All';
+            updateDashboard();
+        });
+
+        // Analytics specific listeners
+        document.getElementById('analyticsDateFilter').addEventListener('change', (e) => {
+            dateFilterInput.value = e.target.value;
+            updateDashboard();
+        });
+        
+        document.getElementById('analyticsShowAllBtn').addEventListener('click', () => {
+            dateFilterInput.value = '';
+            document.getElementById('analyticsDateFilter').value = '';
             updateDashboard();
         });
 
