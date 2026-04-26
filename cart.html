@@ -23,35 +23,7 @@
 
         <div class="cart-content">
             <div class="cart-items" id="cart-items-container">
-                
-                <div class="cart-item" data-price="1200">
-                    <img src="https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Kesar Mangoes" class="item-image">
-                    <div class="item-details">
-                        <h3>Premium Kesar - 1 Dozen</h3>
-                        <p class="item-weight">Approx. 2.5 - 3 kg</p>
-                    </div>
-                    <div class="item-quantity">
-                        <label for="qty1">Qty:</label>
-                        <input type="number" id="qty1" class="qty-input" value="1" min="1">
-                    </div>
-                    <div class="item-price">₹1,200</div>
-                    <button class="remove-btn" title="Remove item">🗑️</button>
-                </div>
-
-                <div class="cart-item" data-price="850">
-                    <img src="https://images.unsplash.com/photo-1618361099192-3bc17e2962cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Mango Pulp" class="item-image">
-                    <div class="item-details">
-                        <h3>100% Pure Kesar Pulp</h3>
-                        <p class="item-weight">1 Litre Jar</p>
-                    </div>
-                    <div class="item-quantity">
-                        <label for="qty2">Qty:</label>
-                        <input type="number" id="qty2" class="qty-input" value="2" min="1">
-                    </div>
-                    <div class="item-price">₹1,700</div>
-                    <button class="remove-btn" title="Remove item">🗑️</button>
-                </div>
-
+                <!-- Cart items will be injected here dynamically -->
             </div>
 
             <div class="cart-summary">
@@ -129,28 +101,43 @@
         const FARM_OWNER_ID = 'YOUR_SUPABASE_USER_ID_HERE';
 
         let finalGrandTotal = 0;
+        let cart = JSON.parse(localStorage.getItem('mango_cart')) || [];
 
-        // Function to calculate and update all cart totals
-        function updateCart() {
+        function renderCart() {
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = '';
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="padding: 20px; color: #777;">Your cart is currently empty. <br><br> <a href="index.html" style="color: #2E7D32; font-weight:bold;">Go add some Kesar Mangoes!</a></p>';
+            } else {
+                cart.forEach((item, index) => {
+                    container.innerHTML += `
+                        <div class="cart-item" data-id="${item.id}" data-price="${item.price}">
+                            <img src="${item.img}" alt="${item.name}" class="item-image">
+                            <div class="item-details">
+                                <h3>${item.name}</h3>
+                                <p class="item-weight">${item.weight}</p>
+                            </div>
+                            <div class="item-quantity">
+                                <label for="qty${index}">Qty:</label>
+                                <input type="number" id="qty${index}" class="qty-input" value="${item.qty}" min="1" data-id="${item.id}">
+                            </div>
+                            <div class="item-price">₹${(item.price * item.qty).toLocaleString('en-IN')}</div>
+                            <button class="remove-btn" data-id="${item.id}" title="Remove item">🗑️</button>
+                        </div>
+                    `;
+                });
+            }
+            updateCartSummary();
+        }
+
+        function updateCartSummary() {
             let subtotal = 0;
             let totalItems = 0;
-            const items = document.querySelectorAll('.cart-item');
 
-            items.forEach(item => {
-                const basePrice = parseFloat(item.getAttribute('data-price'));
-                const qtyInput = item.querySelector('.qty-input');
-                let qty = parseInt(qtyInput.value);
-
-                if (qty < 1 || isNaN(qty)) {
-                    qty = 1;
-                    qtyInput.value = 1;
-                }
-
-                const itemTotal = basePrice * qty;
-                subtotal += itemTotal;
-                totalItems += qty;
-
-                item.querySelector('.item-price').innerText = '₹' + itemTotal.toLocaleString('en-IN');
+            cart.forEach(item => {
+                subtotal += (item.price * item.qty);
+                totalItems += item.qty;
             });
 
             const shipping = subtotal > 0 ? 150 : 0; 
@@ -167,7 +154,6 @@
 
             const openCheckoutBtn = document.getElementById('openCheckoutBtn');
             if (totalItems === 0) {
-                document.getElementById('cart-items-container').innerHTML = '<p style="padding: 20px; color: #777;">Your cart is currently empty. <br><br> <a href="index.html" style="color: #2E7D32; font-weight:bold;">Go add some Kesar Mangoes!</a></p>';
                 openCheckoutBtn.disabled = true;
                 openCheckoutBtn.style.opacity = '0.5';
                 openCheckoutBtn.style.cursor = 'not-allowed';
@@ -181,19 +167,30 @@
         // Event listeners for remove and quantity
         document.querySelector('.cart-content').addEventListener('click', function(e) {
             if (e.target.classList.contains('remove-btn')) {
-                e.target.closest('.cart-item').remove();
-                updateCart();
+                const id = e.target.getAttribute('data-id');
+                cart = cart.filter(item => item.id !== id);
+                localStorage.setItem('mango_cart', JSON.stringify(cart));
+                renderCart();
             }
         });
 
         document.querySelector('.cart-content').addEventListener('input', function(e) {
             if (e.target.classList.contains('qty-input')) {
-                updateCart();
+                const id = e.target.getAttribute('data-id');
+                let newQty = parseInt(e.target.value);
+                if (newQty < 1 || isNaN(newQty)) newQty = 1;
+                
+                const item = cart.find(i => i.id === id);
+                if(item) {
+                    item.qty = newQty;
+                    localStorage.setItem('mango_cart', JSON.stringify(cart));
+                    renderCart();
+                }
             }
         });
 
         // Initialize cart calculation
-        updateCart();
+        renderCart();
 
         // --- Modal & Checkout Logic ---
         const checkoutModal = document.getElementById('checkoutModal');
@@ -219,15 +216,7 @@
             e.preventDefault();
             
             // Gather cart items into a summary string
-            const items = document.querySelectorAll('.cart-item');
-            let itemsSummaryArray = [];
-            
-            items.forEach(item => {
-                const title = item.querySelector('h3').innerText;
-                const qty = item.querySelector('.qty-input').value;
-                itemsSummaryArray.push(`${qty}x ${title}`);
-            });
-            
+            let itemsSummaryArray = cart.map(item => `${item.qty}x ${item.name}`);
             const itemsSummary = itemsSummaryArray.join(', ');
 
             // Get Form Data
@@ -259,7 +248,10 @@
                 submitOrderBtn.disabled = false;
                 submitOrderBtn.innerText = "Confirm Order";
             } else {
-                // Success!
+                // Success! Clear cart
+                localStorage.removeItem('mango_cart');
+                cart = [];
+                
                 checkoutModal.classList.remove('active');
                 document.querySelector('.cart-wrapper').style.display = 'none';
                 
