@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jagadish Mango Farm | Authentic Gir Kesar Mangoes</title>
-    
+
     <link rel="stylesheet" href="style.css">
-    
+
     <!-- 3D Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 </head>
+
 <body>
 
     <header>
-        <a href="#" class="logo">🥭 Jagadish Mango Farm</a>
+        <a href="#" class="logo"> Jagadish Mango Farm</a>
         <nav>
             <ul>
                 <li><a href="#home">Home</a></li>
@@ -30,7 +32,8 @@
         <canvas id="hero-canvas"></canvas>
         <div class="hero-content">
             <h1>Authentic Gir Kesar Mangoes</h1>
-            <p>Grown in the rich soils of Piyava Gir, right beside the Gir National Park. Delivered farm-fresh directly to your doorstep.</p>
+            <p>Grown in the rich soils of Piyava Gir, right beside the Gir National Park. Delivered farm-fresh directly
+                to your doorstep.</p>
             <button class="cta-button" onclick="document.getElementById('shop').scrollIntoView({behavior: 'smooth'})">
                 Pre-Order the Season's Best
             </button>
@@ -39,40 +42,78 @@
 
     <section class="about-section" id="about">
         <h2>From the Heart of Gir National Park</h2>
-        <p>At Jagadish Mango Farm, we take pride in our heritage. Located in Piyava Gir, our orchards benefit from the unique microclimate of the Gir forest region. We use sustainable farming practices to ensure that every Kesar mango you eat is chemical-free, naturally ripened, and bursting with the true taste of Gujarat.</p>
+        <p>At Jagadish Mango Farm, we take pride in our heritage. Located in Piyava Gir, our orchards benefit from the
+            unique microclimate of the Gir forest region. We use sustainable farming practices to ensure that every
+            Kesar mango you eat is chemical-free, naturally ripened, and bursting with the true taste of Gujarat.</p>
+    </section>
+
+    <section class="gallery-section" id="gallery">
+        <h2 class="section-title">A Glimpse of Our Farm</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="mango%20farm%20photoes/PHOTO-2026-04-26-09-54-31%20(1).jpg" alt="Mango Farm View 1">
+            </div>
+            <div class="gallery-item">
+                <img src="mango%20farm%20photoes/PHOTO-2026-04-26-09-54-31.jpg" alt="Mango Farm View 2">
+            </div>
+            <div class="gallery-item">
+                <img src="mango%20farm%20photoes/PHOTO-2026-04-26-09-54-32%20(1).jpg" alt="Mango Farm View 3">
+            </div>
+            <div class="gallery-item">
+                <img src="mango%20farm%20photoes/PHOTO-2026-04-26-09-54-32%20(2).jpg" alt="Mango Farm View 4">
+            </div>
+            <div class="gallery-item">
+                <img src="mango%20farm%20photoes/PHOTO-2026-04-26-09-54-32.jpg" alt="Mango Farm View 5">
+            </div>
+            <div class="gallery-item">
+                <img src="mango%20farm%20photoes/PHOTO-2026-04-26-09-54-33.jpg" alt="Mango Farm View 6">
+            </div>
+        </div>
     </section>
 
     <section class="products" id="shop">
         <h2 class="section-title">Shop Our Harvest</h2>
         <div class="product-grid">
-            
-            <div class="product-card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.5">
-                <img src="https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Kesar Mangoes 1 Dozen" class="product-img">
+
+            <div class="product-card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-glare="true"
+                data-tilt-max-glare="0.5">
+                <img src="https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                    alt="Kesar Mangoes 1 Dozen" class="product-img">
                 <div class="product-info">
                     <h3 class="product-title">Premium Kesar - 1 Dozen</h3>
                     <p>Hand-picked, naturally ripened, A-grade Gir Kesar.</p>
                     <div class="product-price">₹1,200</div>
-                    <button class="add-to-cart" onclick="addToCart('p1', 'Premium Kesar - 1 Dozen', 1200, 'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80', 'Approx. 2.5 - 3 kg')">Add to Cart</button>
+                    <button class="add-to-cart"
+                        onclick="addToCart('p1', 'Premium Kesar - 1 Dozen', 1200, 'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80', 'Approx. 2.5 - 3 kg')">Add
+                        to Cart</button>
                 </div>
             </div>
 
-            <div class="product-card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.5">
-                <img src="https://images.unsplash.com/photo-1591073113125-e46713c829ed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Kesar Mangoes 10kg" class="product-img">
+            <div class="product-card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-glare="true"
+                data-tilt-max-glare="0.5">
+                <img src="https://images.unsplash.com/photo-1591073113125-e46713c829ed?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                    alt="Kesar Mangoes 10kg" class="product-img">
                 <div class="product-info">
                     <h3 class="product-title">Family Box - 10 kg</h3>
                     <p>Perfect for sharing. Semi-ripe mangoes packed safely in hay.</p>
                     <div class="product-price">₹3,500</div>
-                    <button class="add-to-cart" onclick="addToCart('p2', 'Family Box - 10 kg', 3500, 'https://images.unsplash.com/photo-1591073113125-e46713c829ed?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80', '10 kg Box')">Add to Cart</button>
+                    <button class="add-to-cart"
+                        onclick="addToCart('p2', 'Family Box - 10 kg', 3500, 'https://images.unsplash.com/photo-1591073113125-e46713c829ed?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80', '10 kg Box')">Add
+                        to Cart</button>
                 </div>
             </div>
 
-            <div class="product-card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.5">
-                <img src="https://images.unsplash.com/photo-1618361099192-3bc17e2962cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Mango Pulp" class="product-img">
+            <div class="product-card" data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-glare="true"
+                data-tilt-max-glare="0.5">
+                <img src="https://images.unsplash.com/photo-1618361099192-3bc17e2962cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                    alt="Mango Pulp" class="product-img">
                 <div class="product-info">
                     <h3 class="product-title">100% Pure Kesar Pulp</h3>
                     <p>No added sugar or preservatives. Just pure Gir Kesar.</p>
                     <div class="product-price">₹850 / Litre</div>
-                    <button class="add-to-cart" onclick="addToCart('p3', '100% Pure Kesar Pulp', 850, 'https://images.unsplash.com/photo-1618361099192-3bc17e2962cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80', '1 Litre Jar')">Add to Cart</button>
+                    <button class="add-to-cart"
+                        onclick="addToCart('p3', '100% Pure Kesar Pulp', 850, 'https://images.unsplash.com/photo-1618361099192-3bc17e2962cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80', '1 Litre Jar')">Add
+                        to Cart</button>
                 </div>
             </div>
 
@@ -86,7 +127,7 @@
         <p>&copy; 2026 Jagadish Trading Company. All rights reserved.</p>
     </footer>
 
-    <div id="toast">Added to your cart! 🥭</div>
+    <div id="toast">Added to your cart!</div>
 
     <script>
         let cart = JSON.parse(localStorage.getItem('mango_cart')) || [];
@@ -103,14 +144,14 @@
             } else {
                 cart.push({ id, name, price, img, weight, qty: 1 });
             }
-            
+
             localStorage.setItem('mango_cart', JSON.stringify(cart));
             updateCartCount();
 
             // Show popup notification
             const toast = document.getElementById("toast");
             toast.className = "show";
-            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+            setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
         }
 
         // Initialize cart count on load
@@ -121,4 +162,5 @@
     <script src="scripts/3d-effects.js"></script>
 
 </body>
+
 </html>
